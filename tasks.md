@@ -6,13 +6,13 @@ All tasks derived from SPEC.md. Each task maps to a specific feature, configurat
 
 ## Phase 1: Project Scaffolding & Configuration
 
-- [ ] **Install dev dependencies** -- Add `typescript`, `vitest`, `eslint`, and `js-tiktoken` as devDependencies in package.json. | Status: not_done
-- [ ] **Configure peer dependencies** -- Add `model-price-registry` as a required peerDependency (`^1.0.0`) and `js-tiktoken` as an optional peerDependency (`^1.0.0`) with `peerDependenciesMeta` in package.json. | Status: not_done
-- [ ] **Configure CLI binary** -- Add `"bin": { "prompt-price": "dist/cli.js" }` to package.json so the CLI is available as `prompt-price` after global install or via npx. | Status: not_done
-- [ ] **Verify tsconfig.json** -- Confirm existing tsconfig.json settings (target ES2022, module commonjs, strict mode, outDir dist, rootDir src) are correct for the project. No changes expected. | Status: not_done
-- [ ] **Create src/types.ts** -- Define all TypeScript interfaces and types: `Message`, `ContentPart`, `ToolCall`, `ToolDefinition`, `EstimateOptions`, `CountTokensOptions`, `TokenCount`, `Estimate`, `GuardOptions`, `CheckBudgetOptions`, `BudgetResult`, `SupportedClient`, `OpenAILikeClient`, `AnthropicLikeClient`. All types must match Section 8 of the spec exactly. | Status: not_done
-- [ ] **Create src/errors.ts** -- Define `BudgetExceededError` (extends Error, contains `estimate: Estimate` and `maxCost: number` properties, formats message with cost, budget, model, and token counts) and `ModelNotFoundError` (extends Error, contains the unresolved model string). | Status: not_done
-- [ ] **Create src/index.ts exports** -- Set up the barrel file exporting all public API functions (`estimate`, `estimateSync`, `estimatePrompt`, `countTokens`, `countTokensSync`, `compareModels`, `guard`, `checkBudget`) and all types, plus `BudgetExceededError` and `ModelNotFoundError`. | Status: not_done
+- [x] **Install dev dependencies** -- Add `typescript`, `vitest`, `eslint`, and `js-tiktoken` as devDependencies in package.json. | Status: done
+- [x] **Configure peer dependencies** -- Add `model-price-registry` as a required peerDependency (`^1.0.0`) and `js-tiktoken` as an optional peerDependency (`^1.0.0`) with `peerDependenciesMeta` in package.json. | Status: done
+- [x] **Configure CLI binary** -- Add `"bin": { "prompt-price": "dist/cli.js" }` to package.json so the CLI is available as `prompt-price` after global install or via npx. | Status: done
+- [x] **Verify tsconfig.json** -- Confirm existing tsconfig.json settings (target ES2022, module commonjs, strict mode, outDir dist, rootDir src) are correct for the project. No changes expected. | Status: done
+- [x] **Create src/types.ts** -- Define all TypeScript interfaces and types: `Message`, `ContentPart`, `ToolCall`, `ToolDefinition`, `EstimateOptions`, `CountTokensOptions`, `TokenCount`, `Estimate`, `GuardOptions`, `CheckBudgetOptions`, `BudgetResult`, `SupportedClient`, `OpenAILikeClient`, `AnthropicLikeClient`. All types must match Section 8 of the spec exactly. | Status: done
+- [x] **Create src/errors.ts** -- Define `BudgetExceededError` (extends Error, contains `estimate: Estimate` and `maxCost: number` properties, formats message with cost, budget, model, and token counts) and `ModelNotFoundError` (extends Error, contains the unresolved model string). | Status: done
+- [x] **Create src/index.ts exports** -- Set up the barrel file exporting all public API functions (`estimate`, `estimateSync`, `estimatePrompt`, `countTokens`, `countTokensSync`, `compareModels`, `guard`, `checkBudget`) and all types, plus `BudgetExceededError` and `ModelNotFoundError`. | Status: done
 
 ---
 
