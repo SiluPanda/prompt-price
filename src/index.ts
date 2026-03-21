@@ -5,5 +5,9 @@ export type {
   SupportedClient, OpenAILikeClient, AnthropicLikeClient,
 } from './types';
 export { BudgetExceededError, ModelNotFoundError } from './errors';
-// estimate, estimateSync, estimatePrompt, countTokens, countTokensSync,
-// compareModels, guard, checkBudget — to be implemented in later phases
+export { estimate, estimateSync, estimatePrompt, compareModels } from './estimate';
+export { countTokens, countTokensSync } from './count-tokens';
+export { guard, checkBudget } from './guard';
+export { resolveModel } from './model-resolver';
+export { calculateCost, formatCost } from './cost-calculator';
+export { estimateTokens, countChars, countContentTokens } from './heuristic-counter';
