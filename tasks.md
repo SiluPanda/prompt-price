@@ -18,19 +18,19 @@ All tasks derived from SPEC.md. Each task maps to a specific feature, configurat
 
 ## Phase 2: Model Resolution
 
-- [ ] **Create src/model-resolver.ts -- provider/model parsing** -- Implement parsing of `provider/model` strings (e.g., `'openai/gpt-4o'`) into separate provider and model components. Handle the case where the string contains a `/` delimiter. | Status: not_done
-- [ ] **Implement provider inference from model name** -- When no provider prefix is given (e.g., `'gpt-4o'`), infer the provider using known prefixes: `gpt-*` and `o1/o3/o4-*` -> OpenAI, `claude-*` -> Anthropic, `gemini-*` -> Google, `llama-*` -> Meta, `mistral-*` and `codestral*` -> Mistral, `command-*` -> Cohere. Throw `ModelNotFoundError` if provider cannot be inferred. | Status: not_done
-- [ ] **Integrate with model-price-registry for price lookup** -- Call `getPrice()` from `model-price-registry` to retrieve `inputPerMTok` and `outputPerMTok` for the resolved model. Handle the case where the model is not found in the registry (throw `ModelNotFoundError` unless custom pricing is provided). | Status: not_done
+- [x] **Create src/model-resolver.ts -- provider/model parsing** -- Implement parsing of `provider/model` strings (e.g., `'openai/gpt-4o'`) into separate provider and model components. Handle the case where the string contains a `/` delimiter. | Status: done
+- [x] **Implement provider inference from model name** -- When no provider prefix is given (e.g., `'gpt-4o'`), infer the provider using known prefixes: `gpt-*` and `o1/o3/o4-*` -> OpenAI, `claude-*` -> Anthropic, `gemini-*` -> Google, `llama-*` -> Meta, `mistral-*` and `codestral*` -> Mistral, `command-*` -> Cohere. Throw `ModelNotFoundError` if provider cannot be inferred. | Status: done
+- [x] **Integrate with model-price-registry for price lookup** -- Call `getPrice()` from `model-price-registry` to retrieve `inputPerMTok` and `outputPerMTok` for the resolved model. Handle the case where the model is not found in the registry (throw `ModelNotFoundError` unless custom pricing is provided). | Status: done
 - [ ] **Integrate with model-price-registry for model info** -- Call `getModelInfo()` to retrieve the model's category (for default output ratios), context window size, and any alias resolution. Return a `ResolvedModel` object containing provider, canonical model ID, pricing, encoding name, and provider-specific configuration (overhead tokens, chars-per-token ratio). | Status: not_done
 - [ ] **Implement encoding selection for OpenAI models** -- Maintain a static lookup table mapping OpenAI models to encodings: `cl100k_base` for GPT-4o/GPT-4o-mini/GPT-4-turbo/GPT-4/GPT-3.5-turbo, `o200k_base` for GPT-4.1/GPT-4.1-mini/GPT-4.1-nano/o3/o3-mini/o4-mini/o1. Unknown OpenAI models default to `o200k_base`. | Status: not_done
-- [ ] **Implement provider-specific configuration constants** -- Define per-provider config: chars-per-token ratio (OpenAI cl100k: 3.9, OpenAI o200k: 4.0, Anthropic: 3.5, Google: 4.0, Mistral: 3.8, Cohere: 4.0, Meta: 3.7), base overhead tokens, per-message overhead tokens. | Status: not_done
+- [x] **Implement provider-specific configuration constants** -- Define per-provider config: chars-per-token ratio (OpenAI cl100k: 3.9, OpenAI o200k: 4.0, Anthropic: 3.5, Google: 4.0, Mistral: 3.8, Cohere: 4.0, Meta: 3.7), base overhead tokens, per-message overhead tokens. | Status: done
 
 ---
 
 ## Phase 3: Token Counting -- Heuristic
 
-- [ ] **Create src/heuristic-counter.ts** -- Implement `countWithHeuristic(text: string, charsPerToken: number): number`. Formula: `Math.ceil(text.length / charsPerToken)`. Must return 0 for empty string. | Status: not_done
-- [ ] **Ensure heuristic always rounds up** -- The function must use `Math.ceil` to ensure it never underestimates. Verify this with targeted tests. | Status: not_done
+- [x] **Create src/heuristic-counter.ts** -- Implement `countWithHeuristic(text: string, charsPerToken: number): number`. Formula: `Math.ceil(text.length / charsPerToken)`. Must return 0 for empty string. | Status: done
+- [x] **Ensure heuristic always rounds up** -- The function must use `Math.ceil` to ensure it never underestimates. Verify this with targeted tests. | Status: done
 
 ---
 
@@ -45,19 +45,19 @@ All tasks derived from SPEC.md. Each task maps to a specific feature, configurat
 
 ## Phase 5: Message Overhead Calculation
 
-- [ ] **Create src/message-overhead.ts** -- Implement provider-specific overhead calculation functions. | Status: not_done
+- [x] **Create src/message-overhead.ts** -- Implement provider-specific overhead calculation functions. | Status: done
 - [ ] **Implement OpenAI message overhead** -- Per-request base: 3 tokens. Per-message: 4 tokens (covers `<|im_start|>`, role, `<|im_sep|>`, `<|im_end|>`). Name field: +1 token if present. These constants apply to gpt-4o, gpt-4.1, o3, o4-mini. | Status: not_done
-- [ ] **Implement Anthropic message overhead** -- Per-request base: ~10 tokens. Per-message: 3-5 tokens for role markers. System prompt is separate (counted as content, not as a message role overhead). Use empirically calibrated values. | Status: not_done
-- [ ] **Implement default provider message overhead** -- For Google, Mistral, Cohere, Meta, and unknown providers: per-request base 10 tokens, per-message 5 tokens. Conservative defaults for providers without documented overhead formulas. | Status: not_done
+- [x] **Implement Anthropic message overhead** -- Per-request base: ~10 tokens. Per-message: 3-5 tokens for role markers. System prompt is separate (counted as content, not as a message role overhead). Use empirically calibrated values. | Status: done
+- [x] **Implement default provider message overhead** -- For Google, Mistral, Cohere, Meta, and unknown providers: per-request base 10 tokens, per-message 5 tokens. Conservative defaults for providers without documented overhead formulas. | Status: done
 
 ---
 
 ## Phase 6: Tool Definition Tokenization
 
-- [ ] **Create src/tool-tokenizer.ts** -- Implement tool definition serialization and token counting. | Status: not_done
+- [x] **Create src/tool-tokenizer.ts** -- Implement tool definition serialization and token counting. | Status: done
 - [ ] **Implement OpenAI tool serialization** -- Serialize each tool to the TypeScript-like format that matches OpenAI's internal representation: `namespace functions { // <description> type <name> = (_: { <params> }) => any; }`. Tokenize the resulting string using the same tokenizer (native or heuristic) as message content. Add per-tool structural overhead. | Status: not_done
-- [ ] **Implement Anthropic/other tool serialization** -- For Anthropic and other providers, serialize tool definitions to compact JSON representation. Tokenize using the provider's tokenizer strategy. | Status: not_done
-- [ ] **Handle empty tools array** -- When `tools` is undefined or an empty array, return 0 tool tokens with no processing. | Status: not_done
+- [x] **Implement Anthropic/other tool serialization** -- For Anthropic and other providers, serialize tool definitions to compact JSON representation. Tokenize using the provider's tokenizer strategy. | Status: done
+- [x] **Handle empty tools array** -- When `tools` is undefined or an empty array, return 0 tool tokens with no processing. | Status: done
 
 ---
 
@@ -94,9 +94,9 @@ All tasks derived from SPEC.md. Each task maps to a specific feature, configurat
 
 ## Phase 10: Cost Calculator
 
-- [ ] **Create src/cost-calculator.ts** -- Implement cost calculation from token counts and pricing data. | Status: not_done
-- [ ] **Implement basic cost formula** -- `inputCost = inputTokens / 1_000_000 * inputPerMTok`, `estimatedOutputCost = estimatedOutputTokens / 1_000_000 * outputPerMTok`, `totalEstimatedCost = inputCost + estimatedOutputCost - cachedInputSavings`. | Status: not_done
-- [ ] **Implement 6 decimal place rounding** -- Use `Math.round(value * 1_000_000) / 1_000_000` for all cost values. | Status: not_done
+- [x] **Create src/cost-calculator.ts** -- Implement cost calculation from token counts and pricing data. | Status: done
+- [x] **Implement basic cost formula** -- `inputCost = inputTokens / 1_000_000 * inputPerMTok`, `estimatedOutputCost = estimatedOutputTokens / 1_000_000 * outputPerMTok`, `totalEstimatedCost = inputCost + estimatedOutputCost - cachedInputSavings`. | Status: done
+- [x] **Implement 6 decimal place rounding** -- Use `Math.round(value * 1_000_000) / 1_000_000` for all cost values. | Status: done
 - [ ] **Implement tiered pricing** -- For models with long-context pricing tiers (e.g., Gemini 2.5 Pro at 2x above 200K tokens, Claude Sonnet 4.5 at 2x above 200K tokens), apply the tiered rate when `inputTokens` exceeds the tier threshold. The tier applies to the entire input, not just tokens above the threshold. Set `tieredPricingApplied` flag. | Status: not_done
 - [ ] **Implement cached input token savings** -- When `cachedInputTokens` is provided and the model supports prompt caching (has a cached input price in model-price-registry), compute savings as `cachedInputTokens / 1_000_000 * (inputPerMTok - cachedInputPerMTok)`. Set `cachedInputSavings`. When caching is not supported, savings = 0. | Status: not_done
 - [ ] **Support custom pricing overrides** -- When `pricePerMTokInput` and/or `pricePerMTokOutput` are provided in options, use them instead of model-price-registry lookup. | Status: not_done
@@ -105,42 +105,42 @@ All tasks derived from SPEC.md. Each task maps to a specific feature, configurat
 
 ## Phase 11: Core API -- estimate()
 
-- [ ] **Create src/estimate.ts** -- Implement the primary `estimate()` function. | Status: not_done
-- [ ] **Implement async estimate()** -- Orchestrate: (1) resolve model via model-resolver, (2) count tokens via token-counter, (3) estimate output via output-estimator, (4) calculate cost via cost-calculator. Return a complete `Estimate` object with all fields (model, provider, resolvedModelId, inputTokens, inputBreakdown, estimatedOutputTokens, outputEstimationSource, inputCost, estimatedOutputCost, cachedInputSavings, totalEstimatedCost, currency, inputPerMTok, outputPerMTok, tieredPricingApplied, tokenCountConfidence, timestamp). | Status: not_done
-- [ ] **Implement estimateSync()** -- Synchronous variant that always uses heuristic counting (never attempts js-tiktoken). Returns the same `Estimate` shape. | Status: not_done
-- [ ] **Implement estimatePrompt()** -- Convenience wrapper that takes a plain string, wraps it in `[{ role: 'user', content: prompt }]`, and delegates to `estimate()`. | Status: not_done
+- [x] **Create src/estimate.ts** -- Implement the primary `estimate()` function. | Status: done
+- [x] **Implement async estimate()** -- Orchestrate: (1) resolve model via model-resolver, (2) count tokens via token-counter, (3) estimate output via output-estimator, (4) calculate cost via cost-calculator. Return a complete `Estimate` object with all fields (model, provider, resolvedModelId, inputTokens, inputBreakdown, estimatedOutputTokens, outputEstimationSource, inputCost, estimatedOutputCost, cachedInputSavings, totalEstimatedCost, currency, inputPerMTok, outputPerMTok, tieredPricingApplied, tokenCountConfidence, timestamp). | Status: done
+- [x] **Implement estimateSync()** -- Synchronous variant that always uses heuristic counting (never attempts js-tiktoken). Returns the same `Estimate` shape. | Status: done
+- [x] **Implement estimatePrompt()** -- Convenience wrapper that takes a plain string, wraps it in `[{ role: 'user', content: prompt }]`, and delegates to `estimate()`. | Status: done
 - [ ] **Set timestamp field** -- Set `Estimate.timestamp` to the ISO 8601 timestamp of when the estimate was computed (`new Date().toISOString()`). | Status: not_done
-- [ ] **Set currency field** -- Always set `Estimate.currency` to `'USD'`. | Status: not_done
+- [x] **Set currency field** -- Always set `Estimate.currency` to `'USD'`. | Status: done
 
 ---
 
 ## Phase 12: Core API -- countTokens()
 
-- [ ] **Create src/count-tokens.ts** -- Implement standalone token counting functions. | Status: not_done
-- [ ] **Implement async countTokens()** -- Resolve model, count tokens (content, overhead, tools, images), and return a `TokenCount` object. Does not compute cost or output estimation. | Status: not_done
-- [ ] **Implement countTokensSync()** -- Synchronous variant, always uses heuristic. | Status: not_done
+- [x] **Create src/count-tokens.ts** -- Implement standalone token counting functions. | Status: done
+- [x] **Implement async countTokens()** -- Resolve model, count tokens (content, overhead, tools, images), and return a `TokenCount` object. Does not compute cost or output estimation. | Status: done
+- [x] **Implement countTokensSync()** -- Synchronous variant, always uses heuristic. | Status: done
 
 ---
 
 ## Phase 13: Core API -- compareModels()
 
-- [ ] **Create src/compare.ts** -- Implement multi-model comparison. | Status: not_done
-- [ ] **Implement compareModels()** -- Call `estimate()` for each model in the array, collect all `Estimate` objects, sort by `totalEstimatedCost` ascending (cheapest first), and return the sorted array. Handle models from different providers (different token counts per model). | Status: not_done
+- [x] **Create src/compare.ts** -- Implement multi-model comparison. | Status: done
+- [x] **Implement compareModels()** -- Call `estimate()` for each model in the array, collect all `Estimate` objects, sort by `totalEstimatedCost` ascending (cheapest first), and return the sorted array. Handle models from different providers (different token counts per model). | Status: done
 
 ---
 
 ## Phase 14: Budget Guards
 
-- [ ] **Create src/guard.ts** -- Implement budget enforcement features. | Status: not_done
-- [ ] **Implement checkBudget()** -- Low-level function: call `estimate()` with the provided messages/model/options, compare `totalEstimatedCost` against `maxCost`, return `BudgetResult { exceeded, estimate, maxCost }`. | Status: not_done
-- [ ] **Implement guard() for OpenAI SDK** -- Create a `Proxy`-based wrapper that intercepts `client.chat.completions.create()`. Extract messages, model, tools, and max_tokens from the request params. Call `estimate()`. If cost exceeds `maxCost`: abort throws `BudgetExceededError`, warn logs via logger.warn, log logs via logger.info. Call `onEstimate` callback with every estimate regardless of action. If within budget, delegate to the original method. | Status: not_done
-- [ ] **Implement guard() for Anthropic SDK** -- Intercept `client.messages.create()`. Extract messages, model, tools, system, and max_tokens. Same budget evaluation and action dispatch as OpenAI guard. | Status: not_done
-- [ ] **Implement guard() return type preservation** -- The returned proxy must match the input client's type (`T`) so it is a drop-in replacement. Compile-time error for unsupported client types (`SupportedClient` union). | Status: not_done
-- [ ] **Implement guard action: abort** -- Throw `BudgetExceededError` with the `Estimate` and `maxCost`. Prevent the API call from being sent. | Status: not_done
-- [ ] **Implement guard action: warn** -- Log a warning via `logger.warn` (default `console.warn`) with cost details. Allow the API call to proceed. | Status: not_done
-- [ ] **Implement guard action: log** -- Log at info level via `logger.info` (default `console.info`) silently. Allow the API call to proceed. | Status: not_done
+- [x] **Create src/guard.ts** -- Implement budget enforcement features. | Status: done
+- [x] **Implement checkBudget()** -- Low-level function: call `estimate()` with the provided messages/model/options, compare `totalEstimatedCost` against `maxCost`, return `BudgetResult { exceeded, estimate, maxCost }`. | Status: done
+- [x] **Implement guard() for OpenAI SDK** -- Create a `Proxy`-based wrapper that intercepts `client.chat.completions.create()`. Extract messages, model, tools, and max_tokens from the request params. Call `estimate()`. If cost exceeds `maxCost`: abort throws `BudgetExceededError`, warn logs via logger.warn, log logs via logger.info. Call `onEstimate` callback with every estimate regardless of action. If within budget, delegate to the original method. | Status: done
+- [x] **Implement guard() for Anthropic SDK** -- Intercept `client.messages.create()`. Extract messages, model, tools, system, and max_tokens. Same budget evaluation and action dispatch as OpenAI guard. | Status: done
+- [x] **Implement guard() return type preservation** -- The returned proxy must match the input client's type (`T`) so it is a drop-in replacement. Compile-time error for unsupported client types (`SupportedClient` union). | Status: done
+- [x] **Implement guard action: abort** -- Throw `BudgetExceededError` with the `Estimate` and `maxCost`. Prevent the API call from being sent. | Status: done
+- [x] **Implement guard action: warn** -- Log a warning via `logger.warn` (default `console.warn`) with cost details. Allow the API call to proceed. | Status: done
+- [x] **Implement guard action: log** -- Log at info level via `logger.info` (default `console.info`) silently. Allow the API call to proceed. | Status: done
 - [ ] **Implement onEstimate callback** -- Call `options.onEstimate(estimate)` with every estimate, regardless of whether budget is exceeded or what action is configured. For metrics collection. | Status: not_done
-- [ ] **Default guard action** -- When `action` is not specified, default to `'abort'`. | Status: not_done
+- [x] **Default guard action** -- When `action` is not specified, default to `'abort'`. | Status: done
 
 ---
 
@@ -168,7 +168,7 @@ All tasks derived from SPEC.md. Each task maps to a specific feature, configurat
 
 ## Phase 16: Unit Tests -- Token Counting
 
-- [ ] **Create src/__tests__/heuristic.test.ts** -- Test heuristic counter: returns expected token count for known English text samples across all provider ratios; rounds up (never underestimates); returns 0 for empty string. | Status: not_done
+- [x] **Create src/__tests__/heuristic.test.ts** -- Test heuristic counter: returns expected token count for known English text samples across all provider ratios; rounds up (never underestimates); returns 0 for empty string. | Status: done
 - [ ] **Create src/__tests__/tiktoken.test.ts** -- Test native counter: matches OpenAI's documented token counts for reference prompts; selects `cl100k_base` for GPT-4o and `o200k_base` for GPT-4.1; falls back to heuristic when `js-tiktoken` is not installed (mock the dynamic import to reject). Skip tests if js-tiktoken is not available. | Status: not_done
 
 ---
@@ -205,19 +205,19 @@ All tasks derived from SPEC.md. Each task maps to a specific feature, configurat
 
 ## Phase 22: Unit Tests -- Model Resolver
 
-- [ ] **Create src/__tests__/model-resolver.test.ts** -- Test: `openai/gpt-4o` parses correctly; `gpt-4o` infers openai; `claude-sonnet-4-5` infers anthropic; `gemini-2.5-pro` infers google; unknown model without prefix returns error; alias resolution works; unknown model returns `ModelNotFoundError`. | Status: not_done
+- [x] **Create src/__tests__/model-resolver.test.ts** -- Test: `openai/gpt-4o` parses correctly; `gpt-4o` infers openai; `claude-sonnet-4-5` infers anthropic; `gemini-2.5-pro` infers google; unknown model without prefix returns error; alias resolution works; unknown model returns `ModelNotFoundError`. | Status: done
 
 ---
 
 ## Phase 23: Unit Tests -- Estimate Integration
 
-- [ ] **Create src/__tests__/estimate.test.ts** -- Test: `estimate()` produces complete Estimate with all required fields; `estimatePrompt()` wraps text correctly; `estimateSync()` produces same result as `estimate()` when using heuristic; multiple estimates with different models produce different costs. | Status: not_done
+- [x] **Create src/__tests__/estimate.test.ts** -- Test: `estimate()` produces complete Estimate with all required fields; `estimatePrompt()` wraps text correctly; `estimateSync()` produces same result as `estimate()` when using heuristic; multiple estimates with different models produce different costs. | Status: done
 
 ---
 
 ## Phase 24: Unit Tests -- compareModels
 
-- [ ] **Create src/__tests__/compare.test.ts** -- Test: `compareModels()` returns estimates sorted by cost ascending; handles models from different providers with different token counts; returns correct number of estimates. | Status: not_done
+- [x] **Create src/__tests__/compare.test.ts** -- Test: `compareModels()` returns estimates sorted by cost ascending; handles models from different providers with different token counts; returns correct number of estimates. | Status: done
 
 ---
 
