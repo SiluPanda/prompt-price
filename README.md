@@ -3,6 +3,7 @@
 Pre-flight cost estimation for any prompt and model combination. Know what an LLM call will cost before you send it.
 
 [![npm version](https://img.shields.io/npm/v/prompt-price.svg)](https://www.npmjs.com/package/prompt-price)
+[![npm downloads](https://img.shields.io/npm/dt/prompt-price.svg)](https://www.npmjs.com/package/prompt-price)
 [![license](https://img.shields.io/npm/l/prompt-price.svg)](https://github.com/SiluPanda/prompt-price/blob/master/LICENSE)
 [![node](https://img.shields.io/node/v/prompt-price.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
