@@ -1,12 +1,9 @@
 {
   "name": "prompt-price",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Pre-flight cost estimation for any prompt and model combination",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "bin": {
-    "prompt-price": "dist/cli.js"
-  },
   "files": [
     "dist"
   ],

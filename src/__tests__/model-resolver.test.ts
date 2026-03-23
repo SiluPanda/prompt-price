@@ -171,4 +171,21 @@ describe('resolveModel', () => {
       }
     });
   });
+
+  describe('regression: codestral models resolve', () => {
+    it('resolves codestral-2405 to mistral provider', () => {
+      const result = resolveModel('codestral-2405');
+      expect(result.provider).toBe('mistral');
+      expect(result.modelId).toBe('codestral');
+      expect(result.inputPricePerMillion).toBeGreaterThan(0);
+    });
+  });
+
+  describe('regression: fallback separators include _ and :', () => {
+    it('resolves model with underscore separator when provider hint given', () => {
+      const result = resolveModel('gpt-4o_2024-08-06', 'openai');
+      expect(result.provider).toBe('openai');
+      expect(result.modelId).toBe('gpt-4o');
+    });
+  });
 });
