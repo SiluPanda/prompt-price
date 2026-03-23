@@ -43,6 +43,7 @@ const MODEL_CATALOG: ModelEntry[] = [
   // Mistral
   { provider: 'mistral', prefix: 'mistral-large', inputPricePerMillion: 2.00, outputPricePerMillion: 6.00 },
   { provider: 'mistral', prefix: 'mistral-small', inputPricePerMillion: 0.10, outputPricePerMillion: 0.30 },
+  { provider: 'mistral', prefix: 'codestral', inputPricePerMillion: 0.30, outputPricePerMillion: 0.90 },
   // Cohere
   { provider: 'cohere', prefix: 'command-r-plus', inputPricePerMillion: 2.50, outputPricePerMillion: 10.00 },
   { provider: 'cohere', prefix: 'command-r', inputPricePerMillion: 0.15, outputPricePerMillion: 0.60 },
@@ -112,7 +113,7 @@ export function resolveModel(model: string, providerHint?: string): ResolvedMode
     for (const entry of sorted) {
       const idToMatch = modelId.toLowerCase();
       const prefixLower = entry.prefix.toLowerCase();
-      if (idToMatch === prefixLower || idToMatch.startsWith(prefixLower + '-') || idToMatch.startsWith(prefixLower + '.')) {
+      if (idToMatch === prefixLower || idToMatch.startsWith(prefixLower + '-') || idToMatch.startsWith(prefixLower + '.') || idToMatch.startsWith(prefixLower + '_') || idToMatch.startsWith(prefixLower + ':')) {
         return {
           provider: entry.provider,
           modelId: entry.prefix,
